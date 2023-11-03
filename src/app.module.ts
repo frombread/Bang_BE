@@ -3,10 +3,16 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PatientModule } from './patient/patient.module';
 import { MongooseModule } from '@nestjs/mongoose';
-import * as process from 'process';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
-  imports: [PatientModule, MongooseModule.forRoot(process.env.MONGO_URL)],
+  imports: [
+    PatientModule,
+    ConfigModule.forRoot({
+      envFilePath: ['.development.env'], // 파일 이름을 명시합니다.
+    }),
+    MongooseModule.forRoot(process.env.MONGO_URL),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
