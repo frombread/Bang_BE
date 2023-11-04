@@ -1,11 +1,11 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
@@ -16,27 +16,35 @@ export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
   @Post()
-  create(@Body() createPatientDto: CreatePatientDto) {
-    return this.patientService.create(createPatientDto);
+  async create(@Body() createPatientDto: CreatePatientDto) {
+    return await this.patientService.createPatient(createPatientDto);
   }
 
   @Get()
-  findAll() {
-    return this.patientService.findAll();
+  async find(
+    @Query('name') name?: string,
+    @Query('birthday') birthday?: number,
+    @Query('gender') gender?: string,
+  ) {
+    return await this.patientService.find(name, birthday, gender);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.patientService.findOne(+id);
+  @Patch()
+  async update(
+    @Query('name') name: string,
+    @Query('gender') gender: string,
+    @Query('birthday') birthday: number,
+    @Body() updatePatientDto: UpdatePatientDto,
+  ) {
+    return await this.patientService.update(name, gender, birthday, updatePatientDto);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePatientDto: UpdatePatientDto) {
-    return this.patientService.update(+id, updatePatientDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.patientService.remove(+id);
+  @Delete()
+  async remove(
+    @Query('name') name: string,
+    @Query('gender') gender: string,
+    @Query('birthday') birthday: number,
+  ) {
+    return await this.patientService.remove(name, gender, birthday);
   }
 }
