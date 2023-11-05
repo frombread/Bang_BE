@@ -16,15 +16,19 @@ export class PatientsService {
     return createdPatient.save();
   }
 
-  async findAll(page: number, pageSize: number): Promise<Patient[]> {
+  async findAll(
+    page: number,
+    pageSize: number,
+  ): Promise<{ data: Patient[]; pageNum: number }> {
     const skip = (page - 1) * pageSize;
     const data = await this.patientModel
       .find()
       .skip(skip)
       .limit(pageSize)
       .exec();
-    // const total = await this.patientModel.countDocuments();
-    return data;
+    const total = await this.patientModel.countDocuments();
+    const pageNum = Math.ceil(total / pageSize);
+    return { data, pageNum };
   }
 
   async findOne(id: string): Promise<Patient> {
