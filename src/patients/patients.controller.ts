@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { PatientsService } from './patients.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
@@ -20,10 +21,13 @@ export class PatientsController {
     return await this.patientsService.create(createPatientDto);
   }
   @Get('/')
-  async getAllPatient() {
-    return await this.patientsService.findAll();
+  async getAllPatient(
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number = 10,
+  ) {
+    return await this.patientsService.findAll(page, pageSize);
   }
-  @Get(':id')
+  @Get('/read/:id')
   async findOne(@Param('id') id: string) {
     return await this.patientsService.findOne(id);
   }
@@ -35,7 +39,7 @@ export class PatientsController {
   ) {
     return await this.patientsService.update(id, updatePatientDto);
   }
-  @Delete(':id')
+  @Delete('/remove/:id')
   async remove(@Param('id') id: string) {
     return await this.patientsService.remove(id);
   }
