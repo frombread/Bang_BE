@@ -34,7 +34,7 @@ export class PatientsController {
     return await this.patientsService.findOne(id);
   }
 
-  @Put(':id')
+  @Put('/update/:id')
   async update(
     @Param('id') id: string,
     @Body() updatePatientDto: UpdatePatientDto,
