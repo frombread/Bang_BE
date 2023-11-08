@@ -29,6 +29,15 @@ export class PatientsController {
     return await this.patientsService.findAll(page, pageSize);
   }
 
+  @Get('/byname')
+  async getPatient(
+    @Query('page') page: number,
+    @Query('pageSize') pageSize: number = 10,
+    @Query('searchTerm') searchTerm: string,
+  ): Promise<{ data: Patient[]; pageNum: number }> {
+    return await this.patientsService.findAllByName(page, pageSize, searchTerm);
+  }
+
   @Get('/read/:id')
   async findOne(@Param('id') id: string) {
     return await this.patientsService.findOne(id);

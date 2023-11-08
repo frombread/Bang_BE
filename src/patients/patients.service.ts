@@ -23,10 +23,30 @@ export class PatientsService {
     const skip = (page - 1) * pageSize;
     const data = await this.patientModel
       .find()
+      .sort({ _id: -1 }) // createdAt 필드를 기준으로 내림차순 정렬
       .skip(skip)
       .limit(pageSize)
       .exec();
     const total = await this.patientModel.countDocuments();
+    const pageNum = Math.ceil(total / pageSize);
+    return { data, pageNum };
+  }
+
+  async findAllByName(
+    page: number,
+    pageSize: number,
+    searchTerm: string,
+  ): Promise<{ data: Patient[]; pageNum: number }> {
+    const skip = (page - 1) * pageSize;
+    const data = await this.patientModel
+      .find({ name: { $regex: '.*' + searchTerm + '.*' } })
+      .sort({ _id: -1 }) // createdAt 필드를 기준으로 내림차순 정렬
+      .skip(skip)
+      .limit(pageSize)
+      .exec();
+    const total = await this.patientModel
+      .find({ name: { $regex: '.*' + searchTerm + '.*' } })
+      .count();
     const pageNum = Math.ceil(total / pageSize);
     return { data, pageNum };
   }
