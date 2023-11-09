@@ -1,73 +1,93 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## 구현한 방법
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+- 초기에 시드 데이터를 넣어 놓고, 처음 실행시 빈 화면이 보이지 않게 구현
+- 데이터베이스는  환자정보, 기저질환, 통증부위 3개의 스키마로 구성
+    - 기저 질환과 통증 부위 목록은 클라이언트 사이드에서 수정과 추가가 불가능하게 구현
+- restAPI를 통해 서버와 클라이언트간의 통신을 구현
+- React Query 라이브러리를 활용해서 기저 질환과 통증부위를 불러오는 부분을 캐싱
+    - 데이터에 대한 불필요한 중복 요청을 방지
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 어려웠던 점
 
-## Description
+- 검색 기능 활용시 페이지 내에서만 검색되는 문제를 해결하는 과정
+- 프론트 구현중에 모달이랑 조회하고 수정하는 컨포넌트 구조를 설계하는 부분
+- 실행 환경에 따라 달라질 수 있는 부분을 고려하면서 실행 방법을 작성하는 부분
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+# 실행 방법
 
-## Installation
+## 두 가지 실행 방법 중 하나를 선택해서 실행
+
+### 방법1: 도커 활용
+
+> **사전 작업**:  docker desktop 실행
+> 
 
 ```bash
-$ npm install
+# 레포지토리 클론
+git clone https://github.com/frombread/Bang_FE
+git clone https://github.com/frombread/Bang_BE
 ```
-
-## Running the app
 
 ```bash
-# development
-$ npm run start
+# 상위 디렉토리 생성
+mkdir human_bang
 
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+# 복제한 레포를 새로 생성한 디렉토리로 이동
+mv bang_FE human_bang/
+mv bang_BE human_bang/
 ```
 
-## Test
+- BE 저장소에 있는 docker-compose.yaml 파일을 상위 디렉토리로 이동
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+cd human_bang
+mv Bang_BE/docker-compose.yaml ./docker-compose.yaml
 ```
 
-## Support
+```bash
+docker-compose up --build
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+```bash
+http://localhost:8060 으로 접속
+```
 
-## Stay in touch
+## 방법2: 직접 실행 방법 (로컬환경)
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+> **사전 작업**: mongoDB 실행 (27017포트)
+> 
 
-## License
+```bash
+# 저장소를 복제합니다.
+git clone https://github.com/frombread/Bang_FE
+git clone https://github.com/frombread/Bang_BE
+```
 
-Nest is [MIT licensed](LICENSE).
+```bash
+# Bang_BE 디렉토리로 이동
+cd Bang_BE
+
+# 필요한 라이브러리를 설치
+npm install
+
+# 시드 데이터 저장
+npm run seed
+
+# 프로그램 실행
+npm run start
+```
+
+```bash
+# 새로운 터미널에서 Bang_FE 디렉토리로 이동
+cd Bang_FE
+
+# 필요한 라이브러리를 설치
+npm install
+
+# 프로그램 실행
+npm start
+```
+
+```bash
+http://localhost:3000 으로 접속
+```
